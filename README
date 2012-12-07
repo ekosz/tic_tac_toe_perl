@@ -1,0 +1,13 @@
+# Tic Tac Toe in Perl
+
+This is a perl module for playing the classic game, Tic Tac Toe.
+
+All code is written in the [Perl Mod Style](http://perldoc.perl.org/perlmodstyle.html).
+
+## How to contribute
+
+Download the source from GitHub.  
+    
+    perl Build.PL #=> Compiles the source
+    ./Build test  #=> Runs tests
+    perl BuildTest.PL #=> Builds and runs tests
