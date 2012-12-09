@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use lib 'lib';
 use TicTacToe::Scorer;
@@ -14,3 +14,6 @@ is score(['o', 'o', 'o', '', '', '', '', '', ''], 'x'), -1,
 
 is score(['x', 'x', 'x', '', '', '', '', '', ''], 'x'), 1, 
   'The score of a board whose winner is the given letter is 1';
+
+is score(['x', 'x', 'x', '', '', '', '', '', ''], 'x', 2), 0.5, 
+  'As the depth goes up the score goes down';

@@ -14,11 +14,12 @@ sub score {
 
   my $board = shift(@_);
   my $letter = shift(@_);
+  my $depth = shift(@_) || 1;
 
   my $winner = winner($board);
   return 0 unless $winner;
 
-  return 1 if $winner eq $letter;
+  return 1.0 / $depth if $winner eq $letter;
 
   -1;
 }
