@@ -21,7 +21,7 @@ my @solveableBoards = (
 );
 
 use Test::More;
-plan tests => scalar(@unsolvableBoards) + scalar(@solveableBoards) + 3;
+plan tests => scalar(@unsolvableBoards) + scalar(@solveableBoards) + 6;
 
 # Verify module can be included via "use" pragma
 BEGIN { use_ok('TicTacToe::Board') };
@@ -33,13 +33,13 @@ use TicTacToe::Board;
 foreach my $board (@unsolvableBoards) {
   my @board = @{$board};
 
-  ok !winner( @board ), "@board is not solved";
+  ok !winner( $board ), "@board is not solved";
 }
 
 foreach my $board (@solveableBoards) {
   my @board = @{$board};
 
-  is winner( @board ), 'x',  "@board 's winner is x";
+  is winner( $board ), 'x',  "@board 's winner is x";
 }
 
 my @chilrenForOne = children( ['x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', ''], 'x' ); 
@@ -69,3 +69,12 @@ is_deeply( \@childrenForAll,
              ['', '', '', '', '', '', '', '', 'x'],
            ],
            'Creates 9 children, when there is an empty board');
+
+ok !isOver( ['', '', '', '', '', '', '', '', ''] ),
+   "An empty board is not over";
+
+ok isOver( ['x', 'x', 'x', '', '', '', '', '', ''] ),
+  "A solved board is over";
+
+ok isOver( ['x', 'o', 'x', 'x', 'o', 'x', 'o', 'x', 'o'] ),
+  "A cats game is over";

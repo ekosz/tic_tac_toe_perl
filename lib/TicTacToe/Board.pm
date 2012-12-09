@@ -5,7 +5,9 @@ package TicTacToe::Board;
 # ABSTRACT: A set of helper methods for dealing with boards
 
 use base 'Exporter';
-our @EXPORT = qw(winner children);
+our @EXPORT = qw(winner children isOver);
+
+use List::Util qw(reduce);
 
 sub winner { 
   my @winningCombinations = (
@@ -21,7 +23,7 @@ sub winner {
     [2, 4, 6],
   );
 
-  my @board = @_;
+  my @board = @{ shift(@_) };
 
   foreach my $winningCombination (@winningCombinations) {
     my @combo = @{ $winningCombination };
@@ -30,7 +32,7 @@ sub winner {
     my $secound = $board[ $combo[1] ];
     my $third   = $board[ $combo[2] ];
 
-    if( $first && ($first eq $secound) && ($secound eq $third) ) {
+    if( $first && $first eq $secound && $secound eq $third ) {
       return $first;
     }
   }
@@ -53,6 +55,13 @@ sub children {
   }
 
   return @toReturn;
+}
+
+sub isOver {
+  my $board = shift(@_);
+  return 1 if winner($board);
+  return 1 if reduce { $a && $b ? 1 : 0 } @{ $board };
+  0;
 }
 
 1;

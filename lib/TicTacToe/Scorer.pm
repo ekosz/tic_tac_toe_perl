@@ -11,10 +11,11 @@ our @EXPORT = qw(score);
 use TicTacToe::Board qw(winner);
 
 sub score {
-  my @board = @{ shift(@_) };
+
+  my $board = shift(@_);
   my $letter = shift(@_);
 
-  my $winner = winner(@board);
+  my $winner = winner($board);
   return 0 unless $winner;
 
   return 1 if $winner eq $letter;
