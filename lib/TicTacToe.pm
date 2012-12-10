@@ -31,11 +31,11 @@ sub playTicTacToe {
   } elsif($gameMode == 2) {
     $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
 
-    $playerTwo = _generateComputer("Computer", "o");
+    $playerTwo = _generateComputer("Computer", "o", $outputStream);
   } else {
-    $playerOne = _generateComputer("Computer 1", "x");
+    $playerOne = _generateComputer("Computer 1", "x", $outputStream);
 
-    $playerTwo = _generateComputer("Computer 2", "o");
+    $playerTwo = _generateComputer("Computer 2", "o", $outputStream);
   }
 
   my $currentPlayer = $playerOne;
@@ -107,24 +107,29 @@ sub _generateHumanMoveSubroutine {
 }
 
 sub _generateComputer {
-  my $name   = shift(@_);
-  my $letter = shift(@_);
+  my $name         = shift(@_);
+  my $letter       = shift(@_);
+  my $outputStream = shift(@_);
 
   my $computer = {
     "name"   => $name,
     "letter" => $letter
   };
 
-  $computer->{"move"} = _generateComputerMoveSubroutine($computer);
+  $computer->{"move"} = _generateComputerMoveSubroutine($computer, $outputStream);
 
   return $computer;
 }
 
 sub _generateComputerMoveSubroutine {
-  my $player = shift(@_);
+  my $player       = shift(@_);
+  my $outputStream = shift(@_);
 
   return sub {
     my $board = shift(@_);
+
+    printBoard($board, $outputStream);
+    print $outputStream "$player->{'name'} thinking...\n\n";
 
     my @nextBoard = nextMove($board, $player->{"letter"});
     return \@nextBoard;
