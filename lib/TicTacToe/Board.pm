@@ -29,10 +29,10 @@ sub winner {
     my @combo = @{ $winningCombination };
 
     my $first   = $board[ $combo[0] ];
-    my $secound = $board[ $combo[1] ];
+    my $second = $board[ $combo[1] ];
     my $third   = $board[ $combo[2] ];
 
-    if( $first && $first eq $secound && $secound eq $third ) {
+    if( $first && $first eq $second && $second eq $third ) {
       return $first;
     }
   }

@@ -154,7 +154,7 @@ use larger boards.
 
 =head2 Outline Usage
 
-To use TicTacToe simply call the call the playTicTacToe() method. A termainal game
+To use TicTacToe simply call the call the playTicTacToe() method. A terminal game
 will be started;
 
     use TicTacToe;
