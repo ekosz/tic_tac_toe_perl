@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Test::Slow;
 use Test::More tests => 3;
 
 use lib 'lib';

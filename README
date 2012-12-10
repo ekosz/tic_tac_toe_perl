@@ -11,3 +11,11 @@ Download the source from GitHub.
     perl Build.PL #=> Compiles the source
     ./Build test  #=> Runs tests
     perl BuildTest.PL #=> Builds and runs tests
+
+## Useful tidbits
+
+The integration test in TicTacToe.t takes about 10 secounds to run.  Durring development
+that is a pain to run every time you want to test. You can use the enviroment variable
+`QUICK_TEST` if you would like to skip all of the slow tests.
+
+    QUICK_TEST=1 perl BuildTest.PL #=> Skipps slow tests
