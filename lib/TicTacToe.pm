@@ -168,3 +168,18 @@ will be started;
 
 This module also provides low level functions for automatically solving game boards using
 the minimax algorithm.
+
+=head2 Methods
+
+=over 12
+
+=item C<playTicTacToe>
+
+Starts the Tic Tac Toe game.  It takes an input stream and an output stream as arguments.
+The defaults are STDIN and STDOUT.
+
+=back
+
+=head1 AUTHOR
+
+Eric Koslow <http://github.com/ekosz/>
