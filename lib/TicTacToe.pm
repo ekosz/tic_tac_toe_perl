@@ -18,9 +18,9 @@ use TicTacToe::MinimaxSolver qw(nextMove);
 sub playTicTacToe {
   my $inputStream  = shift(@_) || *STDIN;
   my $outputStream = shift(@_) || *STDOUT;
-  my $board = ['', '', '', '', '', '', '', '', '']; 
+  my $board        = ['', '', '', '', '', '', '', '', '']; 
   
-  my $gameMode = getGameMode($inputStream, $outputStream);
+  my $gameMode     = getGameMode($inputStream, $outputStream);
   my $playerOne;
   my $playerTwo;
 
@@ -42,8 +42,10 @@ sub playTicTacToe {
 
   while(!isOver($board)) {
     my $nextBoard = $currentPlayer->{"move"}($board);
-    last if $nextBoard eq 'q';
-    $board = $nextBoard;
+
+    last if $nextBoard eq 'q'; # Quit the game on q
+
+    $board         = $nextBoard;
     $currentPlayer = _nextPlayer($currentPlayer, $playerOne, $playerTwo);
   }
 
@@ -136,7 +138,7 @@ sub _generateComputerMoveSubroutine {
   }
 }
 
-1;
+1; # All modules must end with truthy value
 
 __END__
 

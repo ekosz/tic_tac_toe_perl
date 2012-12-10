@@ -26,10 +26,10 @@ sub winner {
   my @board = @{ shift(@_) };
 
   foreach my $winningCombination (@winningCombinations) {
-    my @combo = @{ $winningCombination };
+    my @combo = @$winningCombination;
 
     my $first   = $board[ $combo[0] ];
-    my $second = $board[ $combo[1] ];
+    my $second  = $board[ $combo[1] ];
     my $third   = $board[ $combo[2] ];
 
     if( $first && $first eq $second && $second eq $third ) {
@@ -47,7 +47,7 @@ sub children {
   my @toReturn = ();
 
   for(my $i = 0; $i < scalar(@board); $i++) {
-    unless($board[$i]) {
+    unless( _cellTaken(\@board, $i) ) {
       my @newBoard = @board;
       $newBoard[$i] = $letter;
       push @toReturn, [ @newBoard ]; # See http://perldoc.perl.org/perllol.html
@@ -57,11 +57,24 @@ sub children {
   return @toReturn;
 }
 
+sub _cellTaken {
+  my $board   = shift(@_);
+  my $locator = shift(@_);
+
+  return $board->[$locator];
+}
+
 sub isOver {
   my $board = shift(@_);
   return 1 if winner($board);
-  return 1 if reduce { $a && $b ? 1 : 0 } @{ $board };
+  return 1 if _allCellsTaken($board);
   0;
 }
 
-1;
+sub _allCellsTaken {
+  my $board = shift(@_);
+
+  return reduce { $a && $b ? 1 : 0 } @{ $board };
+}
+
+1; # All modules must end with a truthy value

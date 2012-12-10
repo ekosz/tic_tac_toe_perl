@@ -27,21 +27,19 @@ sub nextMove {
 }
 
 sub _minimax {
-  my $board = shift(@_);
+  my $board       = shift(@_);
   my $letterToWin = shift(@_);
-  my $depth = shift(@_) || 1;
+  my $depth       = shift(@_) || 1;
 
   return score($board, $letterToWin, $depth) if isOver($board);
 
-  my $direction = shift(@_) || 'min';
+  my $direction     = shift(@_) || 'min';
   my $currentLetter = shift(@_) || _nextLetter($letterToWin);
-  my $alpha = shift(@_) || -9**9; # Really big low number
-  my $beta = shift(@_) || 9**9;   # Really big high number
+  my $alpha         = shift(@_) || -9**9;  # Really big low number
+  my $beta          = shift(@_) ||  9**9;  # Really big high number
 
-  my $nextLetter = _nextLetter($currentLetter);
+  my $nextLetter    = _nextLetter($currentLetter);
   my $nextDirection = $direction eq 'max' ? 'min' : 'max';
-
-  #print STDERR "\n\nBoard: @{ $board }, Direction: $direction, Letter: $currentLetter, Depth: $depth\n";
 
   my @children = children($board, $currentLetter);
 
@@ -67,4 +65,4 @@ sub _nextLetter {
   return $letter eq 'x' ? 'o' : 'x';
 }
 
-1;
+1; # All modules must end with a truthy value
