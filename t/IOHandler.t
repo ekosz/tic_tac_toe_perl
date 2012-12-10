@@ -17,7 +17,7 @@ use TicTacToe::IOHandler;
   my $board = ['', '', '', '', '', '', '', '', ''];
   
   is retrieveMove($board, 'x', "X", $fakeSTDIN, $fakeSTDOUT), 1,
-     "Retrives the proper move for 1";
+     "Retrieves the proper move for 1";
 
   like $output, qr/X, where would you like to play\? \(1-9\): /,
      "Outputs the proper message when retrieving move";
@@ -33,7 +33,7 @@ use TicTacToe::IOHandler;
   my $board = ['', '', '', '', '', '', '', '', ''];
   
   is retrieveMove($board, 'x', "X", $fakeSTDIN, $fakeSTDOUT), 2,
-     "Retrives the proper move for 2";
+     "Retrieves the proper move for 2";
 }
 
 {
@@ -103,7 +103,7 @@ use TicTacToe::IOHandler;
    open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
 
    is getGameMode($fakeSTDIN, $fakeSTDOUT), 2,
-      "Retrives the proper game mode for 2";
+      "Retrieves the proper game mode for 2";
 }
 
 { 
@@ -114,7 +114,7 @@ use TicTacToe::IOHandler;
   open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
 
   is getName("Player 1", $fakeSTDIN, $fakeSTDOUT), "Eric",
-     "Properly retrives a name from the user";
+     "Properly retrieves a name from the user";
 
   is $output, "Player 1, what is your name? ",
      "Outputs the proper message for choosing a name";
