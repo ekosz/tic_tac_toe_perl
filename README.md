@@ -22,7 +22,7 @@ Download the source from GitHub.
 
 ## Useful tidbits
 
-The integration test in TicTacToe.t takes about 10 seconds to run.  During development
+The integration test in ComputerVComputer.t takes about 10 seconds to run.  During development
 that is a pain to run every time you want to test. You can use the environment variable
 `QUICK_TEST` if you would like to skip all of the slow tests.
 
