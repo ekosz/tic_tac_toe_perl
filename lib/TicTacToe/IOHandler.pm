@@ -8,6 +8,8 @@ use base 'Exporter';
 our @EXPORT = qw(retrieveMove printBoard playAgain getGameMode getName);
 
 sub retrieveMove {
+  my $board        = shift(@_);
+  my $letter       = shift(@_);
   my $name         = shift(@_);
   my $inputStream  = shift(@_);
   my $outputStream = shift(@_);
