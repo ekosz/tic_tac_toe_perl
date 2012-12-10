@@ -1,4 +1,4 @@
-use v5.10.0;
+use 5.010;
 use strict;
 use warnings;
 
@@ -6,6 +6,130 @@ package TicTacToe;
 # ABSTRACT: A Tic Tac Toe game for Perl
 
 $TicTacToe::VERSION = '0.1';
+
+use base 'Exporter';
+our @EXPORT = qw(playTicTacToe);
+use lib 'lib';
+
+use TicTacToe::IOHandler qw(getGameMode getName retrieveMove printBoard);
+use TicTacToe::Board qw(isOver winner);
+use TicTacToe::MinimaxSolver qw(nextMove);
+
+sub playTicTacToe {
+  my $inputStream  = shift(@_) || *STDIN;
+  my $outputStream = shift(@_) || *STDOUT;
+  my $board = ['', '', '', '', '', '', '', '', '']; 
+  
+  my $gameMode = getGameMode($inputStream, $outputStream);
+  my $playerOne;
+  my $playerTwo;
+
+  if ($gameMode == 1)  {
+    $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
+
+    $playerTwo = _generateHuman("Player Two", "o", $inputStream, $outputStream);
+  } elsif($gameMode == 2) {
+    $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
+
+    $playerTwo = _generateComputer("Computer", "o");
+  } else {
+    $playerOne = _generateComputer("Computer 1", "x");
+
+    $playerTwo = _generateComputer("Computer 2", "o");
+  }
+
+  my $currentPlayer = $playerOne;
+
+  while(!isOver($board)) {
+    my $nextBoard = $currentPlayer->{"move"}($board);
+    last if $nextBoard eq 'q';
+    $board = $nextBoard;
+    $currentPlayer = _nextPlayer($currentPlayer, $playerOne, $playerTwo);
+  }
+
+  printBoard($board, $outputStream);
+
+  my $winner = _winner($board, $playerOne, $playerTwo);
+  print $outputStream "Game over. $winner won!";
+}
+
+sub _nextPlayer {
+  my $currentPlayer = shift(@_);
+  my $playerOne     = shift(@_);
+  my $playerTwo     = shift(@_);
+
+  return $currentPlayer == $playerOne ? $playerTwo : $playerOne;
+}
+
+sub _winner {
+  my $board     = shift(@_);
+  my $playerOne = shift(@_);
+  my $playerTwo = shift(@_);
+
+  my $winningLetter = winner($board);
+  return "Nobody" unless $winningLetter;
+
+  return $playerOne->{"name"} if $playerOne->{"letter"} eq $winningLetter;
+  return $playerTwo->{"name"} if $playerTwo->{"letter"} eq $winningLetter;
+  die "Invalid winning letter: $winningLetter. $!";
+}
+
+sub _generateHuman {
+  my $name         = shift(@_);
+  my $letter       = shift(@_);
+  my $inputStream  = shift(@_);
+  my $outputStream = shift(@_);
+
+  my $human = {
+    "name"   => getName($name, $inputStream, $outputStream),
+    "letter" => $letter
+  };
+  $human->{"move"} = _generateHumanMoveSubroutine($human, $inputStream, $outputStream);
+
+  return $human;
+}
+
+sub _generateHumanMoveSubroutine {
+  my $player        = shift(@_);
+  my $inputStream   = shift(@_);
+  my $outputStream  = shift(@_);
+
+  return sub {
+    my $board = shift(@_);
+    my $move = retrieveMove($board, $player->{"letter"}, $player->{"name"}, $inputStream, $outputStream);
+
+    return 'q' if $move eq 'q';
+
+    $board->[$move-1] = $player->{"letter"};
+
+    return $board;
+  }
+}
+
+sub _generateComputer {
+  my $name   = shift(@_);
+  my $letter = shift(@_);
+
+  my $computer = {
+    "name"   => $name,
+    "letter" => $letter
+  };
+
+  $computer->{"move"} = _generateComputerMoveSubroutine($computer);
+
+  return $computer;
+}
+
+sub _generateComputerMoveSubroutine {
+  my $player = shift(@_);
+
+  return sub {
+    my $board = shift(@_);
+
+    my @nextBoard = nextMove($board, $player->{"letter"});
+    return \@nextBoard;
+  }
+}
 
 1;
 
@@ -17,7 +141,7 @@ __END__
 
     use TicTacToe;
 
-    play_tic_tac_toe();
+    playTicTacToe();
 
 =head1 DESCRIPTION
 
@@ -30,12 +154,12 @@ use larger boards.
 
 =head2 Outline Usage
 
-To use TicTacToe simply call the call the play_tic_tac_toe() method. A termainal game
+To use TicTacToe simply call the call the playTicTacToe() method. A termainal game
 will be started;
 
     use TicTacToe;
 
-    play_tic_tac_toe();
+    playTicTacToe();
 
 This module also provides low level functions for automatically solving game boards using
 the minimax algorithm.

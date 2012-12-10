@@ -14,6 +14,7 @@ sub retrieveMove {
   my $inputStream  = shift(@_);
   my $outputStream = shift(@_);
 
+  printBoard($board, $outputStream);
   print $outputStream "$name, where would you like to play? (1-9): ";
 
   my $input = _readFrom($inputStream);
