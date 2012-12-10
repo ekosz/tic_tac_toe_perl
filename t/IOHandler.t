@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 9;
+use Test::More tests => 14;
 
 # Verify module can be included via "use" pragma
 BEGIN { use_ok('TicTacToe::IOHandler') };
@@ -68,4 +68,43 @@ use TicTacToe::IOHandler;
   
   ok !playAgain($fakeSTDIN, $fakeSTDOUT), 
      "no is not a response to play again";
+}
+
+{
+  my $output;
+  my $input = "1\n";
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+  open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
+
+  is getGameMode($fakeSTDIN, $fakeSTDOUT), 1,
+     "Retrives the proper game mode for 1";
+
+  is $output, "What type of game would you like to play?\n(1) -- Human     vs   Human\n(2) -- Human     vs   Computer\n(3) -- Computer  vs   Computer\n",
+     "Outputs the proper message for choosing a game mode";
+ }
+
+ {
+   my $output;
+   my $input = "2\n";
+
+   open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+   open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
+
+   is getGameMode($fakeSTDIN, $fakeSTDOUT), 2,
+      "Retrives the proper game mode for 2";
+}
+
+{ 
+  my $output;
+  my $input = "Eric\n";
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+  open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
+
+  is getName("Player 1", $fakeSTDIN, $fakeSTDOUT), "Eric",
+     "Properly retrives a name from the user";
+
+  is $output, "Player 1, what is your name? ",
+     "Outputs the proper message for choosing a name";
 }

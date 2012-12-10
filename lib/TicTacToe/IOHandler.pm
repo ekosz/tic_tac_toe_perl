@@ -5,7 +5,7 @@ package TicTacToe::IOHandler;
 # ABSTRACT: A set of helper methods for dealing with the IO operations
 
 use base 'Exporter';
-our @EXPORT = qw(retrieveMove printBoard playAgain);
+our @EXPORT = qw(retrieveMove printBoard playAgain getGameMode getName);
 
 sub retrieveMove {
   my $name         = shift(@_);
@@ -70,6 +70,28 @@ sub playAgain {
   my $input = _readFrom($inputStream);
 
   return $input =~ /^y(es)?$/i;
+}
+
+sub getGameMode {
+  my $inputStream  = shift(@_);
+  my $outputStream = shift(@_);
+
+  print $outputStream "What type of game would you like to play?\n";
+  print $outputStream "(1) -- Human     vs   Human\n";
+  print $outputStream "(2) -- Human     vs   Computer\n";
+  print $outputStream "(3) -- Computer  vs   Computer\n";
+  
+  return _readFrom($inputStream);
+}
+
+sub getName {
+  my $title        = shift(@_);
+  my $inputStream  = shift(@_);
+  my $outputStream = shift(@_);
+
+  print $outputStream "$title, what is your name? ";
+
+  return _readFrom($inputStream);
 }
 
 1; # All modules must end with a true value
