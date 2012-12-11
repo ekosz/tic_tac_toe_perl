@@ -28,16 +28,22 @@ sub winner {
   foreach my $winningCombination (@winningCombinations) {
     my @combo = @$winningCombination;
 
-    my $first   = $board[ $combo[0] ];
-    my $second  = $board[ $combo[1] ];
-    my $third   = $board[ $combo[2] ];
+    my $firstCell   = $board[ $combo[0] ];
+    my $secondCell  = $board[ $combo[1] ];
+    my $thirdCell   = $board[ $combo[2] ];
 
-    if( $first && $first eq $second && $second eq $third ) {
-      return $first;
+    if( !_blank($firstCell) && $firstCell eq $secondCell && $secondCell eq $thirdCell ) {
+      return $firstCell;
     }
   }
 
   0; # Did not find a winning combination
+}
+
+sub _blank {
+  my $string = shift(@_);
+
+  return !$string;
 }
 
 sub children {
