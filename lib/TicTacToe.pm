@@ -7,6 +7,10 @@ package TicTacToe;
 
 $TicTacToe::VERSION = '0.1';
 
+our $QUIT_COMMAND = 'q';
+our $HUMAN_VS_HUMAN = 1;
+our $HUMAN_VS_COMPUTER = 2;
+
 use base 'Exporter';
 our @EXPORT = qw(playTicTacToe);
 use lib 'lib';
@@ -24,15 +28,15 @@ sub playTicTacToe {
   my $playerOne;
   my $playerTwo;
 
-  if ($gameMode == 1)  {
+  if ($gameMode == $HUMAN_VS_HUMAN)  {
     $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
 
     $playerTwo = _generateHuman("Player Two", "o", $inputStream, $outputStream);
-  } elsif($gameMode == 2) {
+  } elsif($gameMode == $HUMAN_VS_COMPUTER) {
     $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
 
     $playerTwo = _generateComputer("Computer", "o", $outputStream);
-  } else {
+  } else { # Computer Vs Computer
     $playerOne = _generateComputer("Computer 1", "x", $outputStream);
 
     $playerTwo = _generateComputer("Computer 2", "o", $outputStream);
@@ -40,10 +44,10 @@ sub playTicTacToe {
 
   my $currentPlayer = $playerOne;
 
-  while(!isOver($board)) {
-    my $nextBoard = $currentPlayer->{"move"}($board);
+  until( isOver($board) ) {
+    my $nextBoard = $currentPlayer->{"moveSubroutine"}($board);
 
-    last if $nextBoard eq 'q'; # Quit the game on q
+    last if $nextBoard eq $QUIT_COMMAND; # Break
 
     $board         = $nextBoard;
     $currentPlayer = _nextPlayer($currentPlayer, $playerOne, $playerTwo);
@@ -73,6 +77,7 @@ sub _winner {
 
   return $playerOne->{"name"} if $playerOne->{"letter"} eq $winningLetter;
   return $playerTwo->{"name"} if $playerTwo->{"letter"} eq $winningLetter;
+
   die "Invalid winning letter: $winningLetter. $!";
 }
 
@@ -86,7 +91,7 @@ sub _generateHuman {
     "name"   => getName($name, $inputStream, $outputStream),
     "letter" => $letter
   };
-  $human->{"move"} = _generateHumanMoveSubroutine($human, $inputStream, $outputStream);
+  $human->{"moveSubroutine"} = _generateHumanMoveSubroutine($human, $inputStream, $outputStream);
 
   return $human;
 }
@@ -100,7 +105,7 @@ sub _generateHumanMoveSubroutine {
     my $board = shift(@_);
     my $move = retrieveMove($board, $player->{"letter"}, $player->{"name"}, $inputStream, $outputStream);
 
-    return 'q' if $move eq 'q';
+    return $QUIT_COMMAND if $move eq $QUIT_COMMAND;
 
     $board->[$move-1] = $player->{"letter"};
 
@@ -118,7 +123,7 @@ sub _generateComputer {
     "letter" => $letter
   };
 
-  $computer->{"move"} = _generateComputerMoveSubroutine($computer, $outputStream);
+  $computer->{"moveSubroutine"} = _generateComputerMoveSubroutine($computer, $outputStream);
 
   return $computer;
 }
