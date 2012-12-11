@@ -1,0 +1,32 @@
+---
+abstract: 'Play Tic Tac Toe in the console!'
+author:
+  - 'Eric Koslow <ekoslow@gamil.com>'
+build_requires:
+  Test::More: 0.10
+configure_requires:
+  Module::Build: 0.36
+dynamic_config: 0
+generated_by: 'Module::Build version 0.3603'
+license: mit
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: TicTacToe
+provides:
+  Test::Slow:
+    file: lib/Test/Slow.pm
+  TicTacToe:
+    file: lib/TicTacToe.pm
+    version: 0.1
+  TicTacToe::Board:
+    file: lib/TicTacToe/Board.pm
+  TicTacToe::IOHandler:
+    file: lib/TicTacToe/IOHandler.pm
+  TicTacToe::MinimaxSolver:
+    file: lib/TicTacToe/MinimaxSolver.pm
+  TicTacToe::Scorer:
+    file: lib/TicTacToe/Scorer.pm
+resources:
+  license: http://opensource.org/licenses/mit-license.php
+version: 0.1

@@ -142,7 +142,9 @@ sub _generateComputerMoveSubroutine {
 
 __END__
 
+=head1 NAME
 
+Tic Tac Toe
 
 =head1 SYNOPSIS
 
