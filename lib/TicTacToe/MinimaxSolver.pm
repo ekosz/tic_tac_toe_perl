@@ -21,9 +21,16 @@ sub nextMove {
 
   my @children = children($board, $letter);
 
-  my $bestChild = reduce { _minimax($a, $letter) > _minimax($b, $letter) ? $a : $b } @children;
+  my $bestChild = _childWithHighestMinimaxValue(\@children, $letter);
 
   return @{ $bestChild };
+}
+
+sub _childWithHighestMinimaxValue {
+  my @children = @{ shift(@_) };
+  my $letter   =    shift(@_);
+
+  return reduce { _minimax($a, $letter) > _minimax($b, $letter) ? $a : $b } @children;
 }
 
 sub _minimax {
