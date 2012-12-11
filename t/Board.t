@@ -1,6 +1,14 @@
 use strict;
 use warnings;
 
+use Test::More tests => 18;
+
+# Verify module can be included via "use" pragma
+BEGIN { use_ok('TicTacToe::Board') };
+
+use lib 'lib';
+use TicTacToe::Board;
+
 my @unsolvableBoards = (
   ['', '', '', '', '', '', '', '', ''],          # Empty
   ['x', 'x', 'o', '', '', '', '', '', ''],       # Blocked Win
@@ -19,16 +27,6 @@ my @solveableBoards = (
   ['x', '', '', '', 'x', '', '', '', 'x'], # Diagonal
   ['', '', 'x', '', 'x', '', 'x', '', ' '], 
 );
-
-use Test::More;
-plan tests => scalar(@unsolvableBoards) + scalar(@solveableBoards) + 6;
-
-# Verify module can be included via "use" pragma
-BEGIN { use_ok('TicTacToe::Board') };
-
-use lib 'lib';
-use TicTacToe::Board;
-
 
 foreach my $board (@unsolvableBoards) {
   my @board = @{$board};
