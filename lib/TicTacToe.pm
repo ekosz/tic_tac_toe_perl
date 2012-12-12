@@ -103,7 +103,7 @@ sub _generateHumanMoveSubroutine {
 
   return sub {
     my $board = shift(@_);
-    my $move = retrieveMove($board, $player->{"letter"}, $player->{"name"}, $inputStream, $outputStream);
+    my $move  = _retrieveValidMove($board, $player, $inputStream, $outputStream);
 
     return $QUIT_COMMAND if $move eq $QUIT_COMMAND;
 
@@ -111,6 +111,37 @@ sub _generateHumanMoveSubroutine {
 
     return $board;
   }
+}
+
+sub _retrieveValidMove {
+  my $board         = shift(@_);
+  my $player        = shift(@_);
+  my $inputStream   = shift(@_);
+  my $outputStream  = shift(@_);
+
+  my $move;
+
+  while (1) {
+    $move = retrieveMove($board, $player->{"letter"}, $player->{"name"}, $inputStream, $outputStream);
+
+    last if $move eq $QUIT_COMMAND; # Break
+
+    unless ($move =~ /[1-9]|q/) {
+      print $outputStream "Sorry, '$move' is not a proper command\n\n";
+      next;
+    }
+
+    last unless _cellTaken($board->[$move-1]); # Break
+    print $outputStream "Sorry, that spot has already been taken\n\n";
+  }
+
+  return $move;
+}
+
+sub _cellTaken {
+  my $cell = shift(@_);
+
+  return $cell;
 }
 
 sub _generateComputer {

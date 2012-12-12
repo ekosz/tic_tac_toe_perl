@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 8;
 
 use lib 'lib';
 
@@ -40,4 +40,33 @@ use TicTacToe;
 
   like $output, qr/\| o \|/,
        "The computer player plays in a human vs computer game";
+}
+
+{ # Already Taken Spot
+  my $output;
+  my $input = "1\nEric\nAlex\n1\n1\n2\nq\n";
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+  open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
+
+  playTicTacToe($fakeSTDIN, $fakeSTDOUT);
+
+  like $output, qr/Sorry, that spot has already been taken/,
+       "Notifies users of invalid moves";
+
+  like $output, qr/x \| o/,
+       "Does not clober already taken cells";
+}
+
+{ # Bad Move
+  my $output;
+  my $input = "1\nEric\nAlex\na\n1\nq\n";
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+  open my $fakeSTDIN, '<', \$input or die "Couldn't open variable: $!";
+
+  playTicTacToe($fakeSTDIN, $fakeSTDOUT);
+
+  like $output, qr/Sorry, 'a' is not a proper command/,
+       "Notifies users of bad moves";
 }
