@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 # Verify module can be included via "use" pragma
 BEGIN { use_ok('TicTacToe::MinimaxSolver') };
@@ -30,3 +30,9 @@ my @forkingMove = nextMove( ['', '', 'o', '', 'x', '', 'o', '', ''], 'x' );
 ok(!eq_array(\@forkingMove, ['x', '', 'o', '', 'x', '', 'o', '', '']) &&
    !eq_array(\@forkingMove, ['', '', 'o', '', 'x', '', 'o', '', 'x']),
    'It does not pick moves that would create a fork on the next turn');
+
+my @cornerStart = nextMove( ['', '', 'x', '', '', '', '', '', ''], 'o' );
+is_deeply(
+  \@cornerStart,
+  ['', '', 'x', '', 'o', '', '', '', ''],
+  'Plays in the center when the other player starts in a corner');

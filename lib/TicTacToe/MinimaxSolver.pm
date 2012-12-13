@@ -13,7 +13,7 @@ use List::Util qw(reduce);
 use TicTacToe::Board qw(children isOver);
 use TicTacToe::Scorer qw(score);
 
-our $MAXDEPTH = 6;
+our $MAXDEPTH = 7;
 
 sub nextMove {
   my $board = shift(@_);
