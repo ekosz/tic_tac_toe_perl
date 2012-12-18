@@ -16,6 +16,7 @@ our @EXPORT = qw(playTicTacToe);
 use lib 'lib';
 
 use TicTacToe::IOHandler qw(getGameMode getName retrieveMove printBoard);
+use TicTacToe::ErrorHandler qw(validCommand freeCell);
 use TicTacToe::Board qw(isOver winner);
 use TicTacToe::MinimaxSolver qw(nextMove);
 
@@ -126,12 +127,12 @@ sub _retrieveValidMove {
 
     last if $move eq $QUIT_COMMAND; # Break
 
-    unless ($move =~ /[1-9]|q/) {
+    unless (validCommand($move)) {
       print $outputStream "Sorry, '$move' is not a proper command\n\n";
       next;
     }
 
-    last unless _cellTaken($board->[$move-1]); # Break
+    last if freeCell($board, $move-1); # Break
     print $outputStream "Sorry, that spot has already been taken\n\n";
   }
 
