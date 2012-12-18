@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 18;
 
 # Verify module can be included via "use" pragma
 BEGIN { use_ok('TicTacToe::IOHandler') };
@@ -118,4 +118,48 @@ use TicTacToe::IOHandler;
 
   is $output, "Player 1, what is your name? ",
      "Outputs the proper message for choosing a name";
+}
+
+{
+  my $output;
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+
+  printBadCommand("abc", $fakeSTDOUT);
+
+  is $output, "Sorry, 'abc' is not a proper command\n\n",
+     "Prints the proper error message for invalid commands";
+}
+
+{
+  my $output;
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+
+  printTakenSpot($fakeSTDOUT);
+
+  is $output, "Sorry, that spot has already been taken\n\n",
+     "Prints the proper error message for taken spots";
+}
+
+{
+  my $output;
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+
+  printGameOver("Eric", $fakeSTDOUT);
+
+  is $output, "Game over. Eric won!",
+     "Prints the proper game over message";
+}
+
+{
+  my $output;
+
+  open my $fakeSTDOUT, '>', \$output or die "Couldn't open variable: $!";
+
+  printThinking("Eric", $fakeSTDOUT);
+
+  is $output, "Eric thinking...\n\n",
+     "Prints the proper thinking message";
 }

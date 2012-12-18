@@ -15,7 +15,9 @@ use base 'Exporter';
 our @EXPORT = qw(playTicTacToe);
 use lib 'lib';
 
-use TicTacToe::IOHandler qw(getGameMode getName retrieveMove printBoard);
+use TicTacToe::IOHandler qw(getGameMode getName retrieveMove printBoard 
+                            printBadCommand printTakenSpot
+                            printGameOver printThinking);
 use TicTacToe::ErrorHandler qw(validCommand freeCell);
 use TicTacToe::Board qw(isOver winner);
 use TicTacToe::MinimaxSolver qw(nextMove);
@@ -57,7 +59,7 @@ sub playTicTacToe {
   printBoard($board, $outputStream);
 
   my $winner = _winner($board, $playerOne, $playerTwo);
-  print $outputStream "Game over. $winner won!";
+  printGameOver($winner, $outputStream);
 }
 
 sub _nextPlayer {
@@ -128,12 +130,12 @@ sub _retrieveValidMove {
     last if $move eq $QUIT_COMMAND; # Break
 
     unless (validCommand($move)) {
-      print $outputStream "Sorry, '$move' is not a proper command\n\n";
+      printBadCommand($move, $outputStream);
       next;
     }
 
     last if freeCell($board, $move-1); # Break
-    print $outputStream "Sorry, that spot has already been taken\n\n";
+    printTakenSpot($outputStream);
   }
 
   return $move;
@@ -168,7 +170,7 @@ sub _generateComputerMoveSubroutine {
     my $board = shift(@_);
 
     printBoard($board, $outputStream);
-    print $outputStream "$player->{'name'} thinking...\n\n";
+    printThinking($player->{'name'}, $outputStream);
 
     my @nextBoard = nextMove($board, $player->{"letter"});
     return \@nextBoard;
