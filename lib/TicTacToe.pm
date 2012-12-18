@@ -15,36 +15,19 @@ use base 'Exporter';
 our @EXPORT = qw(playTicTacToe);
 use lib 'lib';
 
-use TicTacToe::IOHandler qw(getGameMode getName retrieveMove printBoard 
-                            printBadCommand printTakenSpot
-                            printGameOver printThinking);
-use TicTacToe::ErrorHandler qw(validCommand freeCell);
-use TicTacToe::Board qw(isOver winner);
-use TicTacToe::MinimaxSolver qw(nextMove);
+use TicTacToe::IOHandler qw(getGameMode printGameOver printBoard);
+use TicTacToe::Board     qw(isOver winner);
+use TicTacToe::Player    qw(generatePlayers);
 
 sub playTicTacToe {
   my $inputStream  = shift(@_) || *STDIN;
   my $outputStream = shift(@_) || *STDOUT;
   my $board        = ['', '', '', '', '', '', '', '', '']; 
   
-  my $gameMode     = getGameMode($inputStream, $outputStream);
-  my $playerOne;
-  my $playerTwo;
-
-  if ($gameMode == $HUMAN_VS_HUMAN)  {
-    $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
-
-    $playerTwo = _generateHuman("Player Two", "o", $inputStream, $outputStream);
-  } elsif($gameMode == $HUMAN_VS_COMPUTER) {
-    $playerOne = _generateHuman("Player One", "x", $inputStream, $outputStream);
-
-    $playerTwo = _generateComputer("Computer", "o", $outputStream);
-  } else { # Computer Vs Computer
-    $playerOne = _generateComputer("Computer 1", "x", $outputStream);
-
-    $playerTwo = _generateComputer("Computer 2", "o", $outputStream);
-  }
-
+  my $gameMode      = getGameMode($inputStream, $outputStream);
+  my @players       = generatePlayers($gameMode, $inputStream, $outputStream);
+  my $playerOne     = $players[0];
+  my $playerTwo     = $players[1];
   my $currentPlayer = $playerOne;
 
   until( isOver($board) ) {
@@ -82,99 +65,6 @@ sub _winner {
   return $playerTwo->{"name"} if $playerTwo->{"letter"} eq $winningLetter;
 
   die "Invalid winning letter: $winningLetter. $!";
-}
-
-sub _generateHuman {
-  my $name         = shift(@_);
-  my $letter       = shift(@_);
-  my $inputStream  = shift(@_);
-  my $outputStream = shift(@_);
-
-  my $human = {
-    "name"   => getName($name, $inputStream, $outputStream),
-    "letter" => $letter
-  };
-  $human->{"moveSubroutine"} = _generateHumanMoveSubroutine($human, $inputStream, $outputStream);
-
-  return $human;
-}
-
-sub _generateHumanMoveSubroutine {
-  my $player        = shift(@_);
-  my $inputStream   = shift(@_);
-  my $outputStream  = shift(@_);
-
-  return sub {
-    my $board = shift(@_);
-    my $move  = _retrieveValidMove($board, $player, $inputStream, $outputStream);
-
-    return $QUIT_COMMAND if $move eq $QUIT_COMMAND;
-
-    $board->[$move-1] = $player->{"letter"};
-
-    return $board;
-  }
-}
-
-sub _retrieveValidMove {
-  my $board         = shift(@_);
-  my $player        = shift(@_);
-  my $inputStream   = shift(@_);
-  my $outputStream  = shift(@_);
-
-  my $move;
-
-  while (1) {
-    $move = retrieveMove($board, $player->{"letter"}, $player->{"name"}, $inputStream, $outputStream);
-
-    last if $move eq $QUIT_COMMAND; # Break
-
-    unless (validCommand($move)) {
-      printBadCommand($move, $outputStream);
-      next;
-    }
-
-    last if freeCell($board, $move-1); # Break
-    printTakenSpot($outputStream);
-  }
-
-  return $move;
-}
-
-sub _cellTaken {
-  my $cell = shift(@_);
-
-  return $cell;
-}
-
-sub _generateComputer {
-  my $name         = shift(@_);
-  my $letter       = shift(@_);
-  my $outputStream = shift(@_);
-
-  my $computer = {
-    "name"   => $name,
-    "letter" => $letter
-  };
-
-  $computer->{"moveSubroutine"} = _generateComputerMoveSubroutine($computer, $outputStream);
-
-  return $computer;
-}
-
-sub _generateComputerMoveSubroutine {
-  my $player       = shift(@_);
-  my $outputStream = shift(@_);
-
-  return sub {
-    my $board = shift(@_);
-
-    printBoard($board, $outputStream);
-    printThinking($player->{'name'}, $outputStream);
-
-    my @nextBoard = nextMove($board, $player->{"letter"});
-    return \@nextBoard;
-  }
 }
 
 1; # All modules must end with truthy value
