@@ -24,4 +24,4 @@ sub score {
   -1;
 }
 
-1; # All modules most end with a truth value
+1; # All modules must end with a truth value
